@@ -15,10 +15,6 @@ public class PlayerMotor : MonoBehaviour
 
     void Start()
     {
-        //locking the cursor
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
-
         rb = GetComponent<Rigidbody>();
     }
 
