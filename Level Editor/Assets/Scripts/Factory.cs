@@ -5,12 +5,10 @@ using UnityEngine;
 public class Factory : MonoBehaviour
 {
      //references the object needed to be produced
-    public GameObject model;
     
     //creates new object
-    public GameObject Spawn()
+    public GameObject Spawn(GameObject obj)
     {
-        return Instantiate(model);
-        
+        return Instantiate(obj);
     }
 }
