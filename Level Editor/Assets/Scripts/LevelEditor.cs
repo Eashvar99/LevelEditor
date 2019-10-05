@@ -1,15 +1,32 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Runtime.InteropServices;   
 
 public class LevelEditor : MonoBehaviour
 {   
+     [DllImport(DLL_NAME)]
+    static extern void locLoad();
+
+    [DllImport(DLL_NAME)]
+    static extern System.IntPtr getPos();
+
+    const string DLL_NAME = "Tutorial2";
+     [DllImport(DLL_NAME)]
+    static extern void locSave([In, Out] Vector4[] vecArray, int vecSize);
+
     private Factory factory;
     public GameObject box;
     public GameObject Enemy;
 
-    public List<GameObject> boxList;
-    public List<GameObject> enemyList;
+    private GameObject temp;
+    static private List<GameObject> boxList = new List<GameObject>();
+    static private List<GameObject> enemyList = new List<GameObject>();
+    
+    List<Vector4> test = new List<Vector4>();
+    Vector4 tempVec;
+    
+    float[]  loc;
 
     // Start is called before the first frame update
     void Start()
@@ -17,13 +34,77 @@ public class LevelEditor : MonoBehaviour
         factory = GetComponent<Factory>();
     }
 
+    void Update()
+    {
+         if (Input.GetKeyUp(KeyCode.P))
+        {
+            LoadLocation();
+        }  
+    }
+
     public void addBox()
     {
-         boxList.Add(factory.Spawn(box));
+        temp = factory.Spawn(box);
+        boxList.Add(temp);
     }
 
     public void addEnemy()
     {
-         enemyList.Add(factory.Spawn(Enemy));
+        temp = factory.Spawn(Enemy);
+        enemyList.Add(temp);
     }
+
+    public void SaveLocation()
+    {
+         for(int i = 0; i < boxList.Count; i++)
+        {
+            tempVec = new Vector4(boxList[i].transform.localPosition.x, boxList[i].transform.localPosition.y, boxList[i].transform.localPosition.z, 1.0f);
+            test.Add(tempVec);
+        } 
+
+         for(int i = 0; i < enemyList.Count; i++)
+        {
+            tempVec = new Vector4(enemyList[i].transform.localPosition.x, enemyList[i].transform.localPosition.y, enemyList[i].transform.localPosition.z, 2.0f);
+            test.Add(tempVec);
+        } 
+
+        test.ToArray();
+        
+        locSave(test.ToArray(), (test.Count * 4));
+    }
+
+    public void LoadLocation()
+    {
+        loc = new float[test.Count * 4];
+
+        locLoad();
+        
+        Marshal.Copy(getPos(), loc, 0, test.Count * 4);
+ 
+        int boxNum = 0, enemyNum = 0;
+
+        for(int i = 0; i < test.Count * 4; i+=4)
+        {
+            Debug.Log(loc[i+3]);
+            
+            if(loc[i+3] == 1.0f)
+            {
+             Debug.Log("Box Spawn");
+             boxList.Add(factory.Spawn(box));
+             boxList[boxNum].transform.localPosition = new Vector3(loc[i],loc[i+1], loc[i+2]);
+               
+               boxNum++;
+            }
+            else if(loc[i+3] == 2.0f)
+            {
+               Debug.Log("Enemy Spawn");
+               enemyList.Add(factory.Spawn(Enemy));;
+
+               enemyList[enemyNum].transform.localPosition = new Vector3(loc[i],loc[i+1], loc[i+2]);
+               
+               enemyNum++;
+            }
+        }
+    }
+
 }

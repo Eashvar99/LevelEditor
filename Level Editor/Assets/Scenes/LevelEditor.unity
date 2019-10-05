@@ -130,6 +130,7 @@ GameObject:
   m_Component:
   - component: {fileID: 118394763}
   - component: {fileID: 118394762}
+  - component: {fileID: 118394764}
   m_Layer: 0
   m_Name: LevelEditor
   m_TagString: Untagged
@@ -163,6 +164,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &118394764
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 118394761}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 99ce18c70d810264d94ec53d75d935f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Box: {fileID: 1088093262721708194, guid: 45d324d384f5b484b92619d058378eaf, type: 3}
+  Enemy: {fileID: 4991771369932167670, guid: 34069773ef12a34469d9a8427fa97b7e, type: 3}
 --- !u!1 &626322019
 GameObject:
   m_ObjectHideFlags: 0
@@ -698,8 +713,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   box: {fileID: 1088093262721708194, guid: 45d324d384f5b484b92619d058378eaf, type: 3}
   Enemy: {fileID: 4991771369932167670, guid: 34069773ef12a34469d9a8427fa97b7e, type: 3}
-  boxList: []
-  enemyList: []
 --- !u!114 &786279883
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1287,8 +1300,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   box: {fileID: 1088093262721708194, guid: 45d324d384f5b484b92619d058378eaf, type: 3}
   Enemy: {fileID: 4991771369932167670, guid: 34069773ef12a34469d9a8427fa97b7e, type: 3}
-  boxList: []
-  enemyList: []
 --- !u!114 &1459372230
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1441,10 +1452,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1482134413}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 99ce18c70d810264d94ec53d75d935f5, type: 3}
+  m_Script: {fileID: 11500000, guid: 025f6f5f20c225c4d976e01b0799e9d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Box: {fileID: 1088093262721708194, guid: 45d324d384f5b484b92619d058378eaf, type: 3}
+  box: {fileID: 1088093262721708194, guid: 45d324d384f5b484b92619d058378eaf, type: 3}
   Enemy: {fileID: 4991771369932167670, guid: 34069773ef12a34469d9a8427fa97b7e, type: 3}
 --- !u!114 &1482134417
 MonoBehaviour:

@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1088093262721708205}
   - component: {fileID: 1088093262721708204}
   - component: {fileID: 6827398782756794689}
-  - component: {fileID: 9166211662916864080}
+  - component: {fileID: 4426325480617877936}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Moveable
@@ -106,7 +106,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84f4f829f7671e749bb6290daa5ef3db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!54 &9166211662916864080
+--- !u!54 &4426325480617877936
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
