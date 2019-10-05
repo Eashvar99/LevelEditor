@@ -5,14 +5,17 @@ using System.Runtime.InteropServices;
 public class SaveAndLoad : MonoBehaviour
 {
     const string DLL_NAME = "Tutorial2";
-
-    [DllImport(DLL_NAME)]
-    static extern Vector4[] locLoad();
+ 
+     [DllImport(DLL_NAME)]
+    static extern void locLoad();
 
     [DllImport(DLL_NAME)]
     static extern void locSave([In, Out] Vector4[] vecArray, int vecSize);
-    
-    Vector4[]  loc;
+
+    [DllImport(DLL_NAME)]
+    static extern System.IntPtr getPos();
+
+    float[]  loc;
 
     List<Vector4> test = new List<Vector4>();
 
@@ -28,8 +31,7 @@ public class SaveAndLoad : MonoBehaviour
     void Start()
     {
         factory = GetComponent<Factory>();
-
-        LoadLocation();
+       
     }
 
     // Update is called once per frame
@@ -39,6 +41,10 @@ public class SaveAndLoad : MonoBehaviour
         if (Input.GetKeyUp(KeyCode.O))
         {
             SaveLocation();
+        }
+        if (Input.GetKeyUp(KeyCode.P))
+        {
+            LoadLocation();
         }
 
     }
@@ -54,51 +60,60 @@ public class SaveAndLoad : MonoBehaviour
         test.Add(Test3);
         test.ToArray();
         
-        locSave(test.ToArray(), test.Count);
+        locSave(test.ToArray(), (test.Count * 4));
     }
 
     public void LoadLocation()
     {
-        loc = locLoad();
+        loc = new float[12];
 
-        Debug.Log(loc[0].x + " " + loc[0].y + " " + loc[0].z + " " + loc[0].w);
-        Debug.Log(loc[1].x + " " + loc[1].y + " " + loc[1].z + " " + loc[1].w);
-        Debug.Log(loc[2].x + " " + loc[2].y + " " + loc[2].z + " " + loc[2].w);
-        Debug.Log(loc.Length);
-
-       // GameObject temp;
-
-        //temp = factory.Spawn(Box);
-
-       /*  boxList.Add(factory.Spawn(Box));
-        boxList[0].transform.localPosition = new Vector3(loc[0].x,loc[0].y, loc[0].z);
-
-        boxList.Add(factory.Spawn(Box));
-        boxList[1].transform.localPosition = new Vector3(loc[0].x + 2.0f,loc[0].y, loc[0].z - 4.0f); */
-        int boxNum = 0, enemyNum = 0;
-
-        for(int i = 0; i < 3; i++)
+        locLoad();
+        
+        Marshal.Copy(getPos(), loc, 0, 12);
+    
+        for(int i = 0; i < 12; i++)
         {
-            if(loc[i].w == 1.0f)
-            {
-               Debug.Log("Box Spawn");
-               boxList.Add(factory.Spawn(Box));
-               boxList[boxNum].transform.localPosition = new Vector3(loc[i].x,loc[i].y, loc[i].z);
-               
-               boxNum++;
-            }
-            else if(loc[i].w == 2.0f)
-            {
-               Debug.Log("Enemy Spawn");
-               enemyList.Add(factory.Spawn(Enemy));;
-
-               enemyList[enemyNum].transform.localPosition = new Vector3(loc[i].x,loc[i].y, loc[i].z);
-               Debug.Log("Enemy " + enemyNum);
-
-               
-               enemyNum++;
-            }
+            Debug.Log(loc[i]);
         }
+
+       /*  Debug.Log(loc[0]);
+        Debug.Log(loc[1]);
+        Debug.Log(loc[2]);
+        Debug.Log(loc[3]); */
+
+       //// GameObject temp;
+
+       // //temp = factory.Spawn(Box);
+
+       ///*  boxList.Add(factory.Spawn(Box));
+       // boxList[0].transform.localPosition = new Vector3(loc[0].x,loc[0].y, loc[0].z);
+
+       // boxList.Add(factory.Spawn(Box));
+       // boxList[1].transform.localPosition = new Vector3(loc[0].x + 2.0f,loc[0].y, loc[0].z - 4.0f); */
+       // int boxNum = 0, enemyNum = 0;
+
+       // for(int i = 0; i < 3; i++)
+       // {
+       //     if(loc[i].w == 1.0f)
+       //     {
+       //        Debug.Log("Box Spawn");
+       //        boxList.Add(factory.Spawn(Box));
+       //        boxList[boxNum].transform.localPosition = new Vector3(loc[i].x,loc[i].y, loc[i].z);
+               
+       //        boxNum++;
+       //     }
+       //     else if(loc[i].w == 2.0f)
+       //     {
+       //        Debug.Log("Enemy Spawn");
+       //        enemyList.Add(factory.Spawn(Enemy));;
+
+       //        enemyList[enemyNum].transform.localPosition = new Vector3(loc[i].x,loc[i].y, loc[i].z);
+       //        Debug.Log("Enemy " + enemyNum);
+
+               
+       //        enemyNum++;
+       //     }
+       // }
     }
 
 }

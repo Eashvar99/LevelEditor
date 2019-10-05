@@ -4,13 +4,17 @@ using UnityEngine;
 
 public class DragDrop : MonoBehaviour
 {
-
+    Command command;
     //Initialize Variables
     GameObject movingObject;
     bool isMouseDragging;
     Vector3 offsetValue;
     Vector3 positionOfScreen;
 
+    void Start()
+    {
+        command = GetComponent<Command>();
+    }
     void Update()
     {
 
@@ -21,12 +25,20 @@ public class DragDrop : MonoBehaviour
             movingObject = ReturnClickedObject(out hitInfo);
             if (movingObject != null)
             {
+                GameObject temp;
+                temp = movingObject;
+
                 if (movingObject.tag == "Moveable")
                 {
+                    //command.Chosen(true, temp.transform);
+
                     isMouseDragging = true;
                     //Converting world position to screen position.
                     positionOfScreen = Camera.main.WorldToScreenPoint(movingObject.transform.position);
                     offsetValue = movingObject.transform.position - Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, positionOfScreen.z));
+                }
+                else {
+               // command.Chosen(false,  temp.transform);
                 }
             }
         }

@@ -5,7 +5,11 @@ using UnityEngine;
 public class LevelEditor : MonoBehaviour
 {   
     private Factory factory;
-    public GameObject obj;
+    public GameObject box;
+    public GameObject Enemy;
+
+    public List<GameObject> boxList;
+    public List<GameObject> enemyList;
 
     // Start is called before the first frame update
     void Start()
@@ -15,6 +19,11 @@ public class LevelEditor : MonoBehaviour
 
     public void addBox()
     {
-         factory.Spawn(obj);
+         boxList.Add(factory.Spawn(box));
+    }
+
+    public void addEnemy()
+    {
+         enemyList.Add(factory.Spawn(Enemy));
     }
 }
