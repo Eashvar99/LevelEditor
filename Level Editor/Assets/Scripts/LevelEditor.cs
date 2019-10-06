@@ -11,6 +11,9 @@ public class LevelEditor : MonoBehaviour
     [DllImport(DLL_NAME)]
     static extern System.IntPtr getPos();
 
+    [DllImport(DLL_NAME)]
+    static extern int getSize();
+
     const string DLL_NAME = "Tutorial2";
      [DllImport(DLL_NAME)]
     static extern void locSave([In, Out] Vector4[] vecArray, int vecSize);
@@ -79,19 +82,19 @@ public class LevelEditor : MonoBehaviour
         boxList.Clear();
         enemyList.Clear();
 
+        size = getSize();
+
         Debug.Log(size);
 
-        
-
-        loc = new float[16];
+        loc = new float[size];
 
         locLoad();
         
-        Marshal.Copy(getPos(), loc, 0, 16);
+        Marshal.Copy(getPos(), loc, 0, size);
  
         int boxNum = 0, enemyNum = 0;
 
-        for(int i = 0; i < 16; i+=4)
+        for(int i = 0; i < size; i+=4)
         {
             if(loc[i+3] == 1.0f)
             {
