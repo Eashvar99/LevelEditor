@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 public class LevelEditor : MonoBehaviour
 {   
      [DllImport(DLL_NAME)]
-    static extern void locLoad();
+    static extern void locLoad([In, Out] int size);
 
     [DllImport(DLL_NAME)]
     static extern System.IntPtr getPos();
@@ -33,11 +33,19 @@ public class LevelEditor : MonoBehaviour
 
     int size;
 
+    public Camera FPSCam;
+    public Camera levelCam;
+
+    int boxNum;
+    int enemyNum;
     // Start is called before the first frame update
     void Start()
     {
         factory = GetComponent<Factory>();
-       //LoadLocation();
+        FPSCam.enabled = false;
+        levelCam.enabled = true;
+        boxNum = 0;
+        enemyNum = 0;
     }
 
     void Update()
@@ -47,13 +55,18 @@ public class LevelEditor : MonoBehaviour
 
     public void addBox()
     {
+        boxNum++;
         temp = factory.Spawn(box);
+        temp.name = "Box";
+        //temp.tag = boxNum.ToString();
         boxList.Add(temp);
     }
 
     public void addEnemy()
     {
+        enemyNum++;
         temp = factory.Spawn(Enemy);
+        temp.name = "Enemy";
         enemyList.Add(temp);
     }
 
@@ -88,7 +101,7 @@ public class LevelEditor : MonoBehaviour
 
         loc = new float[size];
 
-        locLoad();
+        locLoad(size);
         
         Marshal.Copy(getPos(), loc, 0, size);
  

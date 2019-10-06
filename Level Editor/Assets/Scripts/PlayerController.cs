@@ -58,13 +58,21 @@ public class PlayerController : MonoBehaviour
 
         motor.Move(velocity); 
 
-        //calculate rotation as 3D vec: Only for character to turn around
+       //calculate rotation as 3D vec: Only for character to turn around
         float yRot = Input.GetAxisRaw("Mouse X");
 
         Vector3 _rotation = new Vector3(0f, yRot, 0f) * lookSensitivity;
 
         //apply player rotation
         motor.Rotate(_rotation);
+
+        //calculate rotation as 3D vec: Only for Camera Look Around
+        float xRot = Input.GetAxisRaw("Mouse Y");
+
+        Vector3 _CamRotation = new Vector3(xRot, 0f, 0f) * lookSensitivity;
+
+        //apply Camera rotation
+        motor.CamRotate(_CamRotation);
         
         if (isGrounded() && Input.GetKey(KeyCode.Space))
         {

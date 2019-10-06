@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿//GDW Aiming Code
+using UnityEngine;
 
 public class aimDownSights : MonoBehaviour
 {
@@ -16,7 +17,7 @@ public class aimDownSights : MonoBehaviour
         else
         {
             transform.localPosition =  Vector3.Slerp(transform.localPosition, hitFirePos, aimSpeed);
-            //transform.localPosition = hitFirePos;
         }
     }
+    
 }

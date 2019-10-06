@@ -2,22 +2,30 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+struct CommandCoord
+{
+   public float x,y,z;
+   public int item,num;
+}
+
+
 public class DragDrop : MonoBehaviour
 {
-    Command command;
     //Initialize Variables
     GameObject movingObject;
     bool isMouseDragging;
     Vector3 offsetValue;
     Vector3 positionOfScreen;
+    //Command Design Variables
+    static List<CommandCoord> commandPos;
+    /////////////////////////////////
 
     void Start()
     {
-        command = GetComponent<Command>();
+        commandPos = new List<CommandCoord>();
     }
     void Update()
     {
-
         //Mouse Button Press Down
         if (Input.GetMouseButtonDown(0))
         {
@@ -30,29 +38,10 @@ public class DragDrop : MonoBehaviour
 
                 if (movingObject.tag == "Moveable")
                 {
-                    //command.Chosen(true, temp.transform);
-
                     isMouseDragging = true;
                     //Converting world position to screen position.
                     positionOfScreen = Camera.main.WorldToScreenPoint(movingObject.transform.position);
                     offsetValue = movingObject.transform.position - Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, positionOfScreen.z));
-                }
-                else {
-               // command.Chosen(false,  temp.transform);
-                }
-            }
-        }
-
-        //Right Mouse Button Press Down
-        if (Input.GetMouseButtonDown(1))
-        {
-            RaycastHit hitInfo;
-            movingObject = ReturnClickedObject(out hitInfo);
-            if (movingObject != null)
-            {
-                if (movingObject.tag == "Moveable")
-                {
-                    Destroy(movingObject);
                 }
             }
         }
@@ -61,6 +50,29 @@ public class DragDrop : MonoBehaviour
         if (Input.GetMouseButtonUp(0))
         {
             isMouseDragging = false;
+
+            CommandCoord save = new CommandCoord();
+            save.x = movingObject.transform.localPosition.x;
+            save.y = movingObject.transform.localPosition.y;
+            save.z = movingObject.transform.localPosition.z;
+
+            if(movingObject.name == "Box")
+            {
+                save.item = 1;
+            }
+            else
+            {
+                save.item = 2;
+            }
+               
+            save.num = 0; //int.Parse(movingObject.tag);
+
+            commandPos.Add(save);
+
+            Debug.Log(commandPos[0].x);
+            Debug.Log(commandPos[0].z);
+            Debug.Log(commandPos[0].item);
+            Debug.Log(commandPos[0].num);
         }
 
         //Is mouse Moving
@@ -74,8 +86,6 @@ public class DragDrop : MonoBehaviour
             //It will update target gameobject's current postion.
             movingObject.transform.position = currentPosition;
         }
-
-
     }
 
     //Method to Return Clicked Object

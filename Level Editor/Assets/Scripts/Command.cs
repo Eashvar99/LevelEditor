@@ -1,80 +1,62 @@
-﻿//Inspired by:  toddisarockstar
-//https://answers.unity.com/questions/1598974/how-to-make-an-undo-redo-system-in-runtime-with-ga.html
-
-using System.Collections;
+﻿/* using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//allow us to
+
+//this class will allow us to create a queue to save a list of actions that have been done
 public class Command : MonoBehaviour
 {
-    
-    public bool chosen;
-    LevelEditor level; 
-    Transform selectedTrans;
+    static List<GameObject> currentObj;
+    static List<GameObject> removedObj;
+    static int counter;
 
-    public class setting {
-         public GameObject Obj;
-         public Vector3 Pos;
-         public Quaternion Rot;
-         public bool Deleted;
-         
-         public void Restore(){
-             Obj.transform.position = Pos;
-             Obj.transform.rotation = Rot;
-             Obj.SetActive (Deleted);
-         }
-         public setting(GameObject g){
-             Obj = g;
-             Pos = g.transform.position;
-             Rot = g.transform.rotation;
-             Deleted = g.activeSelf;
-             
-         }
-
-        
-
-        
-         
-    }
-     
-
-     public List<setting> UndoList;
-     
-     public void AddUndo (GameObject g){
-         setting s = new setting (g);
-         UndoList.Add (s);
-     }
-     
-     public void Undo (){
-         if (UndoList.Count > 0) {
-             UndoList[UndoList.Count-1].Restore();
-             UndoList.RemoveAt(UndoList.Count-1);
-         }}
- 
-     void Start () 
-     {
-         level = GetComponent<LevelEditor>();
-         UndoList = new List<setting> ();
-     }
-
-     void Update()
-     {
-         //for(int i =0; i < level.boxList.Count; i++)
-         //{
-         //    if(level.boxList[i].transform == selectedTrans)
-         //    {
-         //        if(Input.GetMouseButton(0))
-         //        {
-         //           level.boxList[i].transform.localPosition = new Vector3(0f,1f,0f);
-         //        }
-         //    }
-         //}
-     }
- 
-     public void Chosen(bool select, Transform trans)
+    private void Start()
     {
-        chosen = select;
-        selectedTrans = trans;
+        currentObj = new List<GameObject>();
+        currentObj = new List<GameObject>();
     }
 
+    public static void AddCommand(ICommand command)
+    {
+            while (commandHistory.Count > counter)
+            {
+            commandHistory.RemoveAt(counter);
+            }
+        commonBuffer.Enqueue(command);
+    }
+
+    void Update()
+    {
+        if (commonBuffer.Count > 0)
+        {
+            ICommand c = commonBuffer.Dequeue();
+            c.Execute();
+
+            commandHistory.Add(c);
+            counter++;
+        }
+        else
+        {
+
+            if (Input.GetKeyDown(KeyCode.Z))
+            {
+                if (counter > 0)
+                {
+                    counter--;
+                    commandHistory[counter].Undo();
+                }
+            }
+            else if (Input.GetKeyDown(KeyCode.R))
+            {
+                if (counter < commandHistory.Count)
+                {
+                    commandHistory[counter].Execute();
+                    counter++;
+                }
+            }
+        }
+       
+    }
 }
+ */
