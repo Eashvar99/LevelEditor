@@ -26,20 +26,20 @@ public class LevelEditor : MonoBehaviour
     List<Vector4> test = new List<Vector4>();
     Vector4 tempVec;
     
-    float[]  loc;
+    float[] loc;
+
+    int size;
 
     // Start is called before the first frame update
     void Start()
     {
         factory = GetComponent<Factory>();
+       //LoadLocation();
     }
 
     void Update()
     {
-         if (Input.GetKeyUp(KeyCode.P))
-        {
-            LoadLocation();
-        }  
+        size = (test.Count * 4);
     }
 
     public void addBox()
@@ -71,25 +71,30 @@ public class LevelEditor : MonoBehaviour
         test.ToArray();
         
         locSave(test.ToArray(), (test.Count * 4));
+
     }
 
     public void LoadLocation()
     {
-        loc = new float[test.Count * 4];
+        boxList.Clear();
+        enemyList.Clear();
+
+        Debug.Log(size);
+
+        
+
+        loc = new float[16];
 
         locLoad();
         
-        Marshal.Copy(getPos(), loc, 0, test.Count * 4);
+        Marshal.Copy(getPos(), loc, 0, 16);
  
         int boxNum = 0, enemyNum = 0;
 
-        for(int i = 0; i < test.Count * 4; i+=4)
+        for(int i = 0; i < 16; i+=4)
         {
-            Debug.Log(loc[i+3]);
-            
             if(loc[i+3] == 1.0f)
             {
-             Debug.Log("Box Spawn");
              boxList.Add(factory.Spawn(box));
              boxList[boxNum].transform.localPosition = new Vector3(loc[i],loc[i+1], loc[i+2]);
                
@@ -97,7 +102,6 @@ public class LevelEditor : MonoBehaviour
             }
             else if(loc[i+3] == 2.0f)
             {
-               Debug.Log("Enemy Spawn");
                enemyList.Add(factory.Spawn(Enemy));;
 
                enemyList[enemyNum].transform.localPosition = new Vector3(loc[i],loc[i+1], loc[i+2]);
