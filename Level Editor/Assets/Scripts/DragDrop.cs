@@ -2,97 +2,67 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-struct CommandCoord
-{
-   public float x,y,z;
-   public int item,num;
-}
-
-
+//code by Learn Everything Fast
+//https://www.youtube.com/watch?v=7XdEVawBpo4
 public class DragDrop : MonoBehaviour
 {
-    //Initialize Variables
-    GameObject movingObject;
+    GameObject movingObj;
     bool isMouseDragging;
     Vector3 offsetValue;
-    Vector3 positionOfScreen;
-    //Command Design Variables
-    static List<CommandCoord> commandPos;
-    /////////////////////////////////
+    Vector3 posOfScreen;
 
-    void Start()
-    {
-        commandPos = new List<CommandCoord>();
-    }
     void Update()
     {
         //Mouse Button Press Down
         if (Input.GetMouseButtonDown(0))
         {
             RaycastHit hitInfo;
-            movingObject = ReturnClickedObject(out hitInfo);
-            if (movingObject != null)
+            movingObj = ReturnClickedObject(out hitInfo);
+            //if we actually hit something
+            if (movingObj != null)
             {
                 GameObject temp;
-                temp = movingObject;
-
-                if (movingObject.tag == "Moveable")
+                temp = movingObj;
+                    //check if what hit is the movable objects
+                if (movingObj.tag == "Movable")
                 {
                     isMouseDragging = true;
                     //Converting world position to screen position.
-                    positionOfScreen = Camera.main.WorldToScreenPoint(movingObject.transform.position);
-                    offsetValue = movingObject.transform.position - Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, positionOfScreen.z));
+                    posOfScreen = Camera.main.WorldToScreenPoint(movingObj.transform.position);
+                    offsetValue = movingObj.transform.position - Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, posOfScreen.z));
                 }
             }
         }
 
-        //Mouse Button Up
+        //Drop the object when we let go Left Button
         if (Input.GetMouseButtonUp(0))
         {
             isMouseDragging = false;
-
-            CommandCoord save = new CommandCoord();
-            save.x = movingObject.transform.localPosition.x;
-            save.y = movingObject.transform.localPosition.y;
-            save.z = movingObject.transform.localPosition.z;
-
-            if(movingObject.name == "Box")
-            {
-                save.item = 1;
-            }
-            else
-            {
-                save.item = 2;
-            }
-               
-            save.num = 0; //int.Parse(movingObject.tag);
-
-            commandPos.Add(save);
-
-            Debug.Log(commandPos[0].x);
-            Debug.Log(commandPos[0].z);
-            Debug.Log(commandPos[0].item);
-            Debug.Log(commandPos[0].num);
         }
 
-        //Is mouse Moving
+        //Are we dragging the mouse around?
         if (isMouseDragging)
         {
             //tracking mouse position.
-            Vector3 currentScreenSpace = new Vector3(Input.mousePosition.x, Input.mousePosition.y, positionOfScreen.z);
-            //converting screen position to world position with offset changes.
-            Vector3 currentPosition = Camera.main.ScreenToWorldPoint(currentScreenSpace) + offsetValue;
+            Vector3 currentScreen= new Vector3(Input.mousePosition.x, Input.mousePosition.y, posOfScreen.z);
+            //changes the screen pos to worldspace positions
+            Vector3 currentPos = Camera.main.ScreenToWorldPoint(currentScreen) + offsetValue;
 
-            //It will update target gameobject's current postion.
-            movingObject.transform.position = currentPosition;
+            //update the target position will draggin
+            movingObj.transform.position = currentPos;
+
+            //we tried to have it so we can move it from a forward perspective
+            //we ran into issues so we had to use a top down instead
         }
     }
 
-    //Method to Return Clicked Object
+    //Check which movable object we hit
     GameObject ReturnClickedObject(out RaycastHit hit)
     {
         GameObject target = null;
+        //the ray emitting from the mouse postion
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        //check if we hit the desired object
         if (Physics.Raycast(ray.origin, ray.direction * 10, out hit))
         {
             target = hit.collider.gameObject;

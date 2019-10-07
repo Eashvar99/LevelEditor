@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 9158850030661299315}
   m_Layer: 0
   m_Name: Capsule
-  m_TagString: Moveable
+  m_TagString: Movable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

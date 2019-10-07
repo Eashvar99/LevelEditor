@@ -1,4 +1,15 @@
-﻿/* using System.Collections;
+﻿/*////////////////////////////////////
+    Did not have enough time to complete
+   - I would have tried to create two list.
+   - the first to hold in the position everytime a object is created or dragged to a different location
+   - The second is to add whatever is popped from the first list into the second
+   - this allows us to put back the last object position, if the player decides to redo
+
+ //////////////////////////////////*/
+
+
+
+/* using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -14,49 +25,9 @@ public class Command : MonoBehaviour
     private void Start()
     {
         currentObj = new List<GameObject>();
-        currentObj = new List<GameObject>();
+        removedObj = new List<GameObject>();
     }
 
-    public static void AddCommand(ICommand command)
-    {
-            while (commandHistory.Count > counter)
-            {
-            commandHistory.RemoveAt(counter);
-            }
-        commonBuffer.Enqueue(command);
-    }
-
-    void Update()
-    {
-        if (commonBuffer.Count > 0)
-        {
-            ICommand c = commonBuffer.Dequeue();
-            c.Execute();
-
-            commandHistory.Add(c);
-            counter++;
-        }
-        else
-        {
-
-            if (Input.GetKeyDown(KeyCode.Z))
-            {
-                if (counter > 0)
-                {
-                    counter--;
-                    commandHistory[counter].Undo();
-                }
-            }
-            else if (Input.GetKeyDown(KeyCode.R))
-            {
-                if (counter < commandHistory.Count)
-                {
-                    commandHistory[counter].Execute();
-                    counter++;
-                }
-            }
-        }
-       
-    }
+ 
 }
  */

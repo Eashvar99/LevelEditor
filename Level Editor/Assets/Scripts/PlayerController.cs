@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 [RequireComponent(typeof(PlayerMotor))]
 
+//GDW Game
 public class PlayerController : MonoBehaviour
 {
     [SerializeField]
@@ -13,24 +14,14 @@ public class PlayerController : MonoBehaviour
     public Rigidbody rb;
     public CapsuleCollider col;
 
-    //jumping var
-    private float distToGround;
-
     //crouching Var
     Vector3 origScale;
     void Start()
     {
+
         motor = GetComponent<PlayerMotor>();
-        distToGround = col.bounds.extents.y;
         origScale = new Vector3(transform.localScale.x, transform.localScale.y, transform.localScale.z);
     }
-
-    //Check if player is grounded
-    bool isGrounded()
-    {
-       return Physics.Raycast(transform.position, -Vector3.up, distToGround + 0.1f);
-    }
-
     void Update()
     {
 
@@ -74,10 +65,6 @@ public class PlayerController : MonoBehaviour
         //apply Camera rotation
         motor.CamRotate(_CamRotation);
         
-        if (isGrounded() && Input.GetKey(KeyCode.Space))
-        {
-            rb.AddForce(Vector3.up * 0.8f, ForceMode.Impulse);
-        } 
 
         if (Input.GetKey(KeyCode.C))
         {

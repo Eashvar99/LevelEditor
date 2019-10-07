@@ -1,7 +1,9 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using System.Collections.Generic;
 
+//GDW Game
 public class Gun : MonoBehaviour
 {
     public float damage = 10f;
@@ -18,8 +20,11 @@ public class Gun : MonoBehaviour
 
     private float nextTimetoFire = 0f;
 
+    private PoolManager _pool;
+
     void Start()
     {
+        _pool = GameObject.FindObjectOfType<PoolManager>();
         currentAmmo = maxAmmo;
     }
 
@@ -47,6 +52,7 @@ public class Gun : MonoBehaviour
         }
     }
 
+    //must wait a certain amount of time to reload and shoot again
     IEnumerator Reload()
     {
         isReloading = true;
@@ -58,7 +64,7 @@ public class Gun : MonoBehaviour
         isReloading = false;
     }
 
-
+    //shoots rays at objects
     void Shoot()
     {
         currentAmmo--;
@@ -67,7 +73,6 @@ public class Gun : MonoBehaviour
         //check if we actually hit anything
         if (Physics.Raycast(fpsCam.transform.position, fpsCam.transform.forward, out hitInfo, range))
         {
-            Debug.Log(hitInfo.transform.name);
 
             //find the target component on obect we just hit and store it
             Target target = hitInfo.transform.GetComponent<Target>();
@@ -79,11 +84,38 @@ public class Gun : MonoBehaviour
                 target.takeDamage(damage);
             }
 
-
             //apply force to target on impact
             if (hitInfo.rigidbody != null)
             {
                 hitInfo.rigidbody.AddForce(-hitInfo.normal * impactForce);
+            }
+
+            //check if we hit a wall so we can display bulletholes
+            if(hitInfo.collider.tag == "Wall")
+            {
+                
+                for(int i = 0; i < _pool.holeList.Count; i++)
+                {
+                    //if object is inactive in list, use it
+                    if(_pool.holeList[i].activeInHierarchy == false)
+                    {
+                        _pool.holeList[i].SetActive(true);
+                        _pool.holeList[i].transform.position = hitInfo.point;
+                        _pool.holeList[i].transform.rotation = Quaternion.LookRotation(hitInfo.normal);
+                        break;
+                    }
+                    //in case we go through the entire list and require more bullet holes, create some  
+                    else
+                    {
+                        if(i == _pool.holeList.Count - 1)
+                        {
+                        GameObject newBullet = Instantiate(_pool.bulletHole) as GameObject;
+                        newBullet.transform.parent = _pool.transform;
+                        newBullet.SetActive(false);
+                        _pool.holeList.Add(newBullet);               
+                        }     
+                    }
+                }
             }
 
             

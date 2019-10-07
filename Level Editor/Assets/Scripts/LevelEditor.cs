@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Runtime.InteropServices;   
 
+//Marshal array copy code inspired by Tom Tsiolopoulus
 public class LevelEditor : MonoBehaviour
 {   
      [DllImport(DLL_NAME)]
@@ -23,18 +24,19 @@ public class LevelEditor : MonoBehaviour
     public GameObject Enemy;
 
     private GameObject temp;
-    static private List<GameObject> boxList = new List<GameObject>();
-    static private List<GameObject> enemyList = new List<GameObject>();
-    
+    static public List<GameObject> boxList = new List<GameObject>();
+    static public List<GameObject> enemyList = new List<GameObject>();
+
     List<Vector4> test = new List<Vector4>();
     Vector4 tempVec;
     
     float[] loc;
 
-    int size;
+    static int size;
 
     public Camera FPSCam;
     public Camera levelCam;
+    Gun gun;
 
     int boxNum;
     int enemyNum;
@@ -42,12 +44,14 @@ public class LevelEditor : MonoBehaviour
     void Start()
     {
         factory = GetComponent<Factory>();
+        //so we use level editor camera first
         FPSCam.enabled = false;
         levelCam.enabled = true;
         boxNum = 0;
         enemyNum = 0;
     }
 
+    //for the c++ Dll
     void Update()
     {
         size = (test.Count * 4);
@@ -70,6 +74,7 @@ public class LevelEditor : MonoBehaviour
         enemyList.Add(temp);
     }
 
+    //send an array of all gameobjects coordinates to our c++ plugin
     public void SaveLocation()
     {
          for(int i = 0; i < boxList.Count; i++)
@@ -90,10 +95,9 @@ public class LevelEditor : MonoBehaviour
 
     }
 
+    //recieves an array of all gameobjects coordinates from our c++ plugin
     public void LoadLocation()
     {
-        boxList.Clear();
-        enemyList.Clear();
 
         size = getSize();
 
@@ -103,10 +107,14 @@ public class LevelEditor : MonoBehaviour
 
         locLoad(size);
         
+        //use function to interpret C++ float array to c# float array
         Marshal.Copy(getPos(), loc, 0, size);
  
-        int boxNum = 0, enemyNum = 0;
+        boxNum = 0;
+        enemyNum = 0;
 
+        //loop checks every fourth number to know which object to spawn
+        //then spawn that object at the coordinate of the 3 floats before it.
         for(int i = 0; i < size; i+=4)
         {
             if(loc[i+3] == 1.0f)
